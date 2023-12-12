@@ -10,9 +10,10 @@
 typedef struct Cell
 {
 	bool status;
-	bool covered;
-	unsigned int xloc;
-	unsigned int yloc;
+//	bool covered;
+	char symbol;
+	unsigned int x;
+	unsigned int y;
 }cell_t;
 
 typedef struct Nonogram

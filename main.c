@@ -1,15 +1,21 @@
 #include "non.h"
+#include <ncurses.h>
 
 void start_ncurses();
 void end_ncurses();
+void move_pos(WINDOW *win, cell_t *curr, cell_t *next);
+void uncover(WINDOW *win, cell_t *curr);
 
 int main(int argc, char *argv[])
 {
-	//TODO: Use command line args to build the puzzle.
-	int puzzleSize = 5;
+	//Optinally uses command line args to build the puzzle.
+	size_t puzzleSize = 5;
 	if(argc > 1)
 	{
-		puzzleSize = atoi(argv[1]);
+		if(atoi(argv[1]) >= 5)
+		{
+			puzzleSize = atoi(argv[1]);
+		}
 	}
 
 	start_ncurses();
@@ -21,220 +27,81 @@ int main(int argc, char *argv[])
 	refresh();
 
 	non_t *puzzle = non_initialize(puzzleSize);
-	
+
 	//Start the puzzle in the center of the screen
 	int startx, starty;
 	starty = (scrnRow - puzzle -> size)/2;
 	startx = (scrnCol - puzzle -> size)/2;
 
-	
-	WINDOW *puzzle_border = newwin(puzzle -> size + 2, puzzle -> size + 4, starty - 1, startx - 2);
+	//Make puzzle frame
+	int borderHeight = puzzleSize + 2;
+	int borderWidth = puzzleSize + 4;
+	int borderStartY = starty - 1;
+	int borderStartX = startx - 2;
+	WINDOW *puzzle_border = newwin(borderHeight,borderWidth, borderStartY, borderStartX);
 	box(puzzle_border, 0,0);
 	wrefresh(puzzle_border);
-	
+
 	//Cursor position in the puzzle
 	size_t posx = 0, posy = 0;
 
-	//Testing by printing answer sheet
-	WINDOW *puzzle_win= newwin(puzzle -> size, puzzle -> size, starty, startx);
-	keypad(puzzle_win, TRUE); //Get our keyboard
+	//Print Puzzle
+	WINDOW *puzzle_win= newwin(puzzleSize, puzzleSize, starty, startx);
 	non_randomize(puzzle);
 	non_print(puzzle_win, puzzle);
-	
+
 	//Start with cursor at 0,0 on the window.
 	wattron(puzzle_win, A_REVERSE);
-	//mvwprintw(puzzle_win,posy,posx,"%d",puzzle->table[posy][posx].status);
-	mvwprintw(puzzle_win,posy,posx,"?");
+	mvwprintw(puzzle_win,posy,posx,"%c", puzzle->table[posy][posx].symbol);
 	wattroff(puzzle_win, A_REVERSE);
 	wrefresh(puzzle_win);
-	
+
+	//TODO: SET UP CLUE WINDOW X AND CLUE WINDOW Y
+
+	keypad(puzzle_win, TRUE); //Get our keyboard
 	while(1)
 	{
+		//All uncovering does is change the symbol to be the status
 		int c = wgetch(puzzle_win);
-		cell_t currSpot = puzzle -> table[posy][posx];
-		cell_t nextSpot;
+		cell_t *currSpot = &(puzzle -> table[posy][posx]);
+		cell_t *nextSpot;
 		switch(c)
 		{
 			case KEY_UP:
 				if(posy != 0)
 				{
-						
-					nextSpot = puzzle -> table[posy-1][posx];
-					
-					if(!currSpot.covered)
-					{
-						mvwprintw(puzzle_win,posy,posx,"%d",puzzle->table[posy][posx].status);
-						if(!nextSpot.covered)
-						{
-							wattron(puzzle_win, A_REVERSE);
-							mvwprintw(puzzle_win,posy-1,posx,"%d",puzzle->table[posy-1][posx].status);
-							wattroff(puzzle_win, A_REVERSE);
-							wrefresh(puzzle_win);
-						}
-						else
-						{
-							wattron(puzzle_win, A_REVERSE);
-							mvwprintw(puzzle_win,posy-1,posx,"?");
-							wattroff(puzzle_win, A_REVERSE);
-							wrefresh(puzzle_win);
-							
-						}
-					}
-					else
-					{
-						mvwprintw(puzzle_win,posy,posx,"?");
-						if(!nextSpot.covered)
-						{
-							wattron(puzzle_win, A_REVERSE);
-							mvwprintw(puzzle_win,posy-1,posx,"%d",puzzle->table[posy-1][posx].status);
-							wattroff(puzzle_win, A_REVERSE);
-							wrefresh(puzzle_win);
-						}
-						else
-						{
-							wattron(puzzle_win, A_REVERSE);
-							mvwprintw(puzzle_win,posy-1,posx,"?");
-							wattroff(puzzle_win, A_REVERSE);
-							wrefresh(puzzle_win);
-						}	
-					}
+
+					nextSpot = &(puzzle -> table[posy-1][posx]);
+					move_pos(puzzle_win,currSpot, nextSpot);
 					posy -= 1;
 				}
 				break;
 			case KEY_DOWN:
 				if(posy != puzzle -> size - 1)
 				{
-					nextSpot = puzzle -> table[posy+1][posx];
-
-					if(!currSpot.covered)
-					{
-						mvwprintw(puzzle_win,posy,posx,"%d",puzzle->table[posy][posx].status);
-						if(!nextSpot.covered)
-						{
-							wattron(puzzle_win, A_REVERSE);
-							mvwprintw(puzzle_win,posy+1,posx,"%d",puzzle->table[posy+1][posx].status);
-							wattroff(puzzle_win, A_REVERSE);
-							wrefresh(puzzle_win);
-						}
-						else
-						{
-							wattron(puzzle_win, A_REVERSE);
-							mvwprintw(puzzle_win,posy+1,posx,"?");
-							wattroff(puzzle_win, A_REVERSE);
-							wrefresh(puzzle_win);
-
-						}
-					}
-					else
-					{
-						mvwprintw(puzzle_win,posy,posx,"?");
-						if(!nextSpot.covered)
-						{
-							wattron(puzzle_win, A_REVERSE);
-							mvwprintw(puzzle_win,posy+1,posx,"%d",puzzle->table[posy+1][posx].status);
-							wattroff(puzzle_win, A_REVERSE);
-							wrefresh(puzzle_win);
-						}
-						else
-						{
-							wattron(puzzle_win, A_REVERSE);
-							mvwprintw(puzzle_win,posy+1,posx,"?");
-							wattroff(puzzle_win, A_REVERSE);
-							wrefresh(puzzle_win);
-						}	
-					}
+					nextSpot = &(puzzle -> table[posy+1][posx]);
+					move_pos(puzzle_win,currSpot, nextSpot);
 					posy += 1;
 				}
 				break;
 			case KEY_LEFT:
 				if(posx != 0)
-				{
-					nextSpot = puzzle -> table[posy][posx-1];
-
-					if(!currSpot.covered)
-					{
-						mvwprintw(puzzle_win,posy,posx,"%d",puzzle->table[posy][posx].status);
-						if(!nextSpot.covered)
-						{
-							wattron(puzzle_win, A_REVERSE);
-							mvwprintw(puzzle_win,posy,posx-1,"%d",puzzle->table[posy][posx-1].status);
-							wattroff(puzzle_win, A_REVERSE);
-							wrefresh(puzzle_win);
-						}
-						else
-						{
-							wattron(puzzle_win, A_REVERSE);
-							mvwprintw(puzzle_win,posy,posx-1,"?");
-							wattroff(puzzle_win, A_REVERSE);
-							wrefresh(puzzle_win);
-
-						}
-					}
-					else
-					{
-						mvwprintw(puzzle_win,posy,posx,"?");
-						if(!nextSpot.covered)
-						{
-							wattron(puzzle_win, A_REVERSE);
-							mvwprintw(puzzle_win,posy,posx-1,"%d",puzzle->table[posy][posx-1].status);
-							wattroff(puzzle_win, A_REVERSE);
-							wrefresh(puzzle_win);
-						}
-						else
-						{
-							wattron(puzzle_win, A_REVERSE);
-							mvwprintw(puzzle_win,posy,posx-1,"?");
-							wattroff(puzzle_win, A_REVERSE);
-							wrefresh(puzzle_win);
-						}	
-					}
+				{	
+					nextSpot = &(puzzle -> table[posy][posx-1]);
+					move_pos(puzzle_win,currSpot, nextSpot);
 					posx -= 1;
 				}
 				break;
 			case KEY_RIGHT:
 				if(posx != puzzle -> size - 1)
-				{
-					nextSpot = puzzle -> table[posy][posx+1];
-
-					if(!currSpot.covered)
-					{
-						mvwprintw(puzzle_win,posy,posx,"%d",puzzle->table[posy][posx].status);
-						if(!nextSpot.covered)
-						{
-							wattron(puzzle_win, A_REVERSE);
-							mvwprintw(puzzle_win,posy,posx+1,"%d",puzzle->table[posy][posx+1].status);
-							wattroff(puzzle_win, A_REVERSE);
-							wrefresh(puzzle_win);
-						}
-						else
-						{
-							wattron(puzzle_win, A_REVERSE);
-							mvwprintw(puzzle_win,posy,posx+1,"?");
-							wattroff(puzzle_win, A_REVERSE);
-							wrefresh(puzzle_win);
-
-						}
-					}
-					else
-					{
-						mvwprintw(puzzle_win,posy,posx,"?");
-						if(!nextSpot.covered)
-						{
-							wattron(puzzle_win, A_REVERSE);
-							mvwprintw(puzzle_win,posy,posx+1,"%d",puzzle->table[posy][posx+1].status);
-							wattroff(puzzle_win, A_REVERSE);
-							wrefresh(puzzle_win);
-						}
-						else
-						{
-							wattron(puzzle_win, A_REVERSE);
-							mvwprintw(puzzle_win,posy,posx+1,"?");
-							wattroff(puzzle_win, A_REVERSE);
-							wrefresh(puzzle_win);
-						}	
-					}
+				{	
+					nextSpot = &(puzzle -> table[posy][posx+1]);
+					move_pos(puzzle_win,currSpot, nextSpot);
 					posx += 1;
 				}
+				break;
+			case 'z':
+				uncover(puzzle_win, currSpot);
 				break;
 			default:
 				end_ncurses();
@@ -254,9 +121,26 @@ void start_ncurses()
 	keypad(stdscr, TRUE); //Get our keyboard
 	noecho();	//Don't echo to the screen
 	curs_set(0);
-	
+
 }
 void end_ncurses()
 {
 	endwin();
+}
+void move_pos(WINDOW *win, cell_t *curr, cell_t *next)
+{
+	mvwprintw(win, curr->y, curr->x, "%c",curr->symbol);
+	wattron(win, A_REVERSE);
+	mvwprintw(win,next->y,next->x,"%c",next->symbol);
+	wattroff(win, A_REVERSE);
+	wrefresh(win);
+}
+void uncover(WINDOW *win, cell_t *curr)
+{
+	if(curr -> status == 1) curr -> symbol = '#'; 
+	else curr -> symbol = '_';
+	wattron(win, A_REVERSE);
+	mvwprintw(win,curr->y,curr->x,"%c",curr->symbol);
+	wattroff(win, A_REVERSE);
+	wrefresh(win);
 }
