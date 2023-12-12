@@ -27,6 +27,13 @@ non_t* non_initialize(size_t size)
 			free(non);
 		}
 	}
+	for(size_t i = 0; i < non -> size; i++)
+	{
+		for(size_t j = 0; j < non -> size; j++)
+		{
+			non -> table[i][j].covered = true;
+		}
+	}
 	return non;
 }
 
@@ -51,7 +58,15 @@ void non_print(WINDOW *win, non_t * non)
 		{
 			for(size_t j = 0; j < non -> size; j++)
 			{
-				printw("%d",non->table[i][j].status);
+				if(!non->table[i][j].covered)
+				{
+					printw("%d",non->table[i][j].status);
+				}
+				else
+				{
+					printw("?");
+					
+				}
 			}
 			printw("\n");
 		}
@@ -62,9 +77,15 @@ void non_print(WINDOW *win, non_t * non)
 		{
 			for(size_t j = 0; j < non -> size; j++)
 			{
-				wprintw(win, "%d",non->table[i][j].status);
+				if(!non->table[i][j].covered)
+				{
+					wprintw(win, "%d",non->table[i][j].status);
+				}
+				else
+				{
+					wprintw(win, "?");
+				}
 			}
-			//wprintw(win,"\n");
 		}
 	}
 }

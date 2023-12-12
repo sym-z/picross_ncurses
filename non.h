@@ -10,6 +10,7 @@
 typedef struct Cell
 {
 	bool status;
+	bool covered;
 	unsigned int xloc;
 	unsigned int yloc;
 }cell_t;
