@@ -33,8 +33,6 @@ bool clue_insert(cluequeue_t *cq, int val)
 	else
 	{
 		//Regular insertion at tail.
-		clue_t * clue = (clue_t *) malloc (sizeof(clue_t));
-		if (clue == NULL) return 0;
 		clue -> value = val;
 		clue -> next = NULL; 
 

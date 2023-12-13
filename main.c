@@ -34,6 +34,15 @@ int main(int argc, char *argv[])
 	starty = (scrnRow - puzzle -> size)/2;
 	startx = (scrnCol - puzzle -> size)/2;
 
+
+	//Cursor position in the puzzle
+	size_t posx = 0, posy = 0;
+
+
+	//TODO: SET UP CLUE WINDOW X AND CLUE WINDOW Y
+	non_clue_print_debug(NULL, puzzle);
+	refresh();
+
 	//Make puzzle frame
 	int borderHeight = puzzleSize + 2;
 	int borderWidth = puzzleSize + 4;
@@ -42,9 +51,6 @@ int main(int argc, char *argv[])
 	WINDOW *puzzle_border = newwin(borderHeight,borderWidth, borderStartY, borderStartX);
 	box(puzzle_border, 0,0);
 	wrefresh(puzzle_border);
-
-	//Cursor position in the puzzle
-	size_t posx = 0, posy = 0;
 
 	//Print Puzzle
 	WINDOW *puzzle_win= newwin(puzzleSize, puzzleSize, starty, startx);
@@ -55,10 +61,6 @@ int main(int argc, char *argv[])
 	mvwprintw(puzzle_win,posy,posx,"%c", puzzle->table[posy][posx].symbol);
 	wattroff(puzzle_win, A_REVERSE);
 	wrefresh(puzzle_win);
-
-	//TODO: SET UP CLUE WINDOW X AND CLUE WINDOW Y
-	non_clue_print_debug(NULL, puzzle);
-	refresh();
 
 	keypad(puzzle_win, TRUE); //Get our keyboard
 	while(1)
