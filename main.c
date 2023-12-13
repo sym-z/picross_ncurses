@@ -26,6 +26,8 @@ int main(int argc, char *argv[])
 	refresh();
 
 	non_t *puzzle = non_initialize(puzzleSize);
+	non_randomize(puzzle);
+	non_solve(puzzle);
 
 	//Start the puzzle in the center of the screen
 	int startx, starty;
@@ -46,7 +48,6 @@ int main(int argc, char *argv[])
 
 	//Print Puzzle
 	WINDOW *puzzle_win= newwin(puzzleSize, puzzleSize, starty, startx);
-	non_randomize(puzzle);
 	non_print(puzzle_win, puzzle);
 
 	//Start with cursor at 0,0 on the window.
@@ -56,6 +57,8 @@ int main(int argc, char *argv[])
 	wrefresh(puzzle_win);
 
 	//TODO: SET UP CLUE WINDOW X AND CLUE WINDOW Y
+	non_clue_print_debug(NULL, puzzle);
+	refresh();
 
 	keypad(puzzle_win, TRUE); //Get our keyboard
 	while(1)

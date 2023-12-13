@@ -12,14 +12,17 @@ cluequeue_t * clue_initialize()
 }
 bool clue_insert(cluequeue_t *cq, int val)
 {
+	clue_t * clue = (clue_t *) malloc (sizeof(clue_t));
+	if (clue == NULL) return 0;
 	//Insert at tail
 	if(cq -> head == NULL && cq -> tail == NULL)
 	{
 		//Empty List
-		clue_t * clue = (clue_t *) malloc (sizeof(clue_t));
-		if (clue == NULL) return 0;
 		clue -> value = val;
 		clue -> next = NULL; 
+		cq -> head = clue;
+		cq -> tail = clue;
+
 		return 1;
 	}
 	else if(cq -> head == NULL || cq -> tail == NULL)
@@ -34,7 +37,7 @@ bool clue_insert(cluequeue_t *cq, int val)
 		if (clue == NULL) return 0;
 		clue -> value = val;
 		clue -> next = NULL; 
-		
+
 		cq -> tail -> next = clue;
 		cq -> tail = clue;
 		return 1;

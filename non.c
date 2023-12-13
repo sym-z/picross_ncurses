@@ -95,6 +95,65 @@ void non_randomize(non_t *non)
 	}
 }
 
+void non_solve(non_t *non)
+{
+	if(non == NULL) return;
+	//Current value to get pushed into the queue
+	int count = 0;
+	for(size_t i = 0; i < non -> size; i++)
+	{
+		for(size_t j = 0; j < non -> size; j++)
+		{
+			//Index through rows, and calculate
+			//If there is a filled spot
+			if(non -> table[i][j].status)
+			{
+				count++;
+			}
+			//We encounter an empty
+			else
+			{
+				//If we have a streak going
+				if(count)
+				{
+					clue_insert(non -> rowClues[i], count);
+					//Reset Streak
+					count = 0;
+				}
+			}
+		}
+		//If we have a streak going
+		if(count)
+		{
+			clue_insert(non -> rowClues[i], count);
+			//Reset Streak
+			count = 0;
+		}
+	}
+	//TODO: DO COLS
+}
+//TODO: PRINT CLUES
+void non_clue_print_debug(WINDOW *win, non_t *non)
+{
+	if(non == NULL) return;
+	clue_t * currClue;
+	if(win == NULL)
+	{
+		//Print rows
+		for(size_t i = 0; i < non -> size; i++)
+		{
+			printw("Row %ld:\t", i);
+			for (currClue = non -> rowClues[i] -> head; currClue != NULL; currClue = currClue -> next)
+			{
+				printw("%d ", currClue -> value);
+			}
+			printw("\n");
+		}
+		//TODO: Print cols
+	}
+}
+
+//TODO: PRINT CLUES WIN
 void non_print(WINDOW *win, non_t * non)
 {
 	if(win == NULL)
