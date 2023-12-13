@@ -1,6 +1,6 @@
 CC = gcc
 CFLAGS = -g -O3 -Wall -Wpedantic -Wextra
-OBJS = non.o main.o 
+OBJS = clueq.o non.o main.o 
 LIBS = -lncurses
 
 a.out: $(OBJS) 
@@ -11,6 +11,9 @@ main.o: main.c
 
 non.o: non.c non.h
 	$(CC) $(CFLAGS) -c non.c
+
+clueq.o: clueq.c clueq.h
+	$(CC) $(CFLAGS) -c clueq.c
 
 clean:
 	rm -rf *.o a.out

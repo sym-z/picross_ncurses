@@ -2,7 +2,6 @@
 #include <ncurses.h>
 
 void start_ncurses();
-void end_ncurses();
 void move_pos(WINDOW *win, cell_t *curr, cell_t *next);
 void uncover(WINDOW *win, cell_t *curr);
 
@@ -104,12 +103,14 @@ int main(int argc, char *argv[])
 				uncover(puzzle_win, currSpot);
 				break;
 			default:
-				end_ncurses();
 				goto end;
 		}
 	}
 end:
 	non_delete(puzzle);
+	delwin(puzzle_win);
+	delwin(puzzle_border);
+	endwin();
 	return 0;
 }
 
@@ -122,10 +123,6 @@ void start_ncurses()
 	noecho();	//Don't echo to the screen
 	curs_set(0);
 
-}
-void end_ncurses()
-{
-	endwin();
 }
 void move_pos(WINDOW *win, cell_t *curr, cell_t *next)
 {

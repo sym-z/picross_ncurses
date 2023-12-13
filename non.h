@@ -1,16 +1,14 @@
 #ifndef NON_H
 #define NON_H
-#include <stdbool.h>
 #include <stddef.h>
 #include <stdio.h>
-#include <stdlib.h>
 #include <time.h>
 #include <ncurses.h>
+#include "clueq.h"
 
 typedef struct Cell
 {
 	bool status;
-//	bool covered;
 	char symbol;
 	unsigned int x;
 	unsigned int y;
@@ -19,7 +17,8 @@ typedef struct Cell
 typedef struct Nonogram
 {
 	cell_t** table;
-
+	cluequeue_t ** colClues;
+	cluequeue_t ** rowClues;
 	size_t size;
 }non_t;
 
