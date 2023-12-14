@@ -34,6 +34,8 @@ void non_solve(non_t *non);
 
 void non_clue_print_debug(WINDOW *win, non_t *non);
 
-void non_clue_print(WINDOW *win, non_t *non);
+void non_clue_print_x(WINDOW *win, non_t *non);
+
+void non_clue_print_y(WINDOW *win, non_t *non);
 
 #endif //NON_H

@@ -65,7 +65,8 @@ int main(int argc, char *argv[])
 
 	//Print clue window X and Y
 	WINDOW *clue_win_x = newwin(puzzleSize,puzzleSize,starty,borderStartX - puzzleSize);
-	box(clue_win_x,0,0);
+	non_clue_print_x(clue_win_x,puzzle);
+	//box(clue_win_x,0,0);
 	wrefresh(clue_win_x);
 
 
