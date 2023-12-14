@@ -6,6 +6,7 @@ typedef struct Clue
 {
 	int value;
 	struct Clue *next;
+	struct Clue *prev;
 }clue_t;
 
 typedef struct ClueQueue

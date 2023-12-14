@@ -22,9 +22,11 @@ int main(int argc, char *argv[])
 
 	getmaxyx(stdscr,scrnRow, scrnCol);
 
+	
 	printw("Sym-Z Picross World!\nRows:%d\tCols:%d\t\n", scrnRow,scrnCol);
 	refresh();
-
+	
+	//Make the puzzle, randomize it, and fill clue queues
 	non_t *puzzle = non_initialize(puzzleSize);
 	non_randomize(puzzle);
 	non_solve(puzzle);
@@ -38,8 +40,7 @@ int main(int argc, char *argv[])
 	//Cursor position in the puzzle
 	size_t posx = 0, posy = 0;
 
-
-	//TODO: SET UP CLUE WINDOW X AND CLUE WINDOW Y
+	//Prints test clues
 	non_clue_print_debug(NULL, puzzle);
 	refresh();
 
@@ -61,6 +62,16 @@ int main(int argc, char *argv[])
 	mvwprintw(puzzle_win,posy,posx,"%c", puzzle->table[posy][posx].symbol);
 	wattroff(puzzle_win, A_REVERSE);
 	wrefresh(puzzle_win);
+
+	//Print clue window X and Y
+	WINDOW *clue_win_x = newwin(puzzleSize,puzzleSize,starty,borderStartX - puzzleSize);
+	box(clue_win_x,0,0);
+	wrefresh(clue_win_x);
+
+
+	WINDOW *clue_win_y = newwin(puzzleSize,puzzleSize,borderStartY - puzzleSize,startx);
+	box(clue_win_y,0,0);
+	wrefresh(clue_win_y);
 
 	keypad(puzzle_win, TRUE); //Get our keyboard
 	while(1)
@@ -115,6 +126,7 @@ end:
 	non_delete(puzzle);
 	delwin(puzzle_win);
 	delwin(puzzle_border);
+	delwin(clue_win_x);
 	endwin();
 	return 0;
 }

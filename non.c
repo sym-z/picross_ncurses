@@ -130,7 +130,39 @@ void non_solve(non_t *non)
 			count = 0;
 		}
 	}
-	//TODO: DO COLS
+	//TODO: DO COLS THIS COULD BE MERGED EVENUTALLY
+	count = 0;
+
+	for(size_t i = 0; i < non -> size; i++)
+	{
+		for(size_t j = 0; j < non -> size; j++)
+		{
+			//Index through cols, and calculate
+			//If there is a filled spot
+			if(non -> table[j][i].status)
+			{
+				count++;
+			}
+			//We encounter an empty
+			else
+			{
+				//If we have a streak going
+				if(count)
+				{
+					clue_insert(non -> colClues[i], count);
+					//Reset Streak
+					count = 0;
+				}
+			}
+		}
+		//If we have a streak going
+		if(count)
+		{
+			clue_insert(non -> colClues[i], count);
+			//Reset Streak
+			count = 0;
+		}
+	}
 }
 //TODO: PRINT CLUES
 void non_clue_print_debug(WINDOW *win, non_t *non)
@@ -149,7 +181,16 @@ void non_clue_print_debug(WINDOW *win, non_t *non)
 			}
 			printw("\n");
 		}
-		//TODO: Print cols
+		//Print cols
+		for(size_t i = 0; i < non -> size; i++)
+		{
+			printw("Col %ld:\t", i);
+			for (currClue = non -> colClues[i] -> head; currClue != NULL; currClue = currClue -> next)
+			{
+				printw("%d ", currClue -> value);
+			}
+			printw("\n");
+		}
 	}
 }
 

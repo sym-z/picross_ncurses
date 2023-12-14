@@ -5,6 +5,7 @@ LIBS = -lncurses
 
 a.out: $(OBJS) 
 	$(CC) $(CFLAGS) $(OBJS) $(LIBS)
+	rm *.o
 
 main.o: main.c
 	$(CC) $(CFLAGS) -c main.c

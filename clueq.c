@@ -20,6 +20,7 @@ bool clue_insert(cluequeue_t *cq, int val)
 		//Empty List
 		clue -> value = val;
 		clue -> next = NULL; 
+		clue -> prev = NULL; 
 		cq -> head = clue;
 		cq -> tail = clue;
 
@@ -35,6 +36,7 @@ bool clue_insert(cluequeue_t *cq, int val)
 		//Regular insertion at tail.
 		clue -> value = val;
 		clue -> next = NULL; 
+		clue -> prev = cq -> tail; 
 
 		cq -> tail -> next = clue;
 		cq -> tail = clue;
