@@ -1,13 +1,21 @@
 #include "non.h"
 #include <ncurses.h>
+//TODO: Print controls
+//TODO: Keep track of filled spots and countdown, so you know when the game is over
+//TODO: Deduct a life on a missed input
+//TODO: Edit spacing
+//TODO: Highlight Row and Column that you are in by calling a function in the switch statement.
+//TODO: Marking a spot that is filled deducts a point 
+//TODO: Window for points that gets edited
 
 void start_ncurses();
 void move_pos(WINDOW *win, cell_t *curr, cell_t *next);
 void uncover(WINDOW *win, cell_t *curr);
+void mark(WINDOW *win, cell_t *curr);
 
 int main(int argc, char *argv[])
 {
-	//Optinally uses command line args to build the puzzle.
+	//Optionally uses command line args to build the puzzle.
 	size_t puzzleSize = 5;
 	if(argc > 1)
 	{
@@ -23,7 +31,8 @@ int main(int argc, char *argv[])
 	getmaxyx(stdscr,scrnRow, scrnCol);
 
 	
-	printw("Sym-Z Picross World!\nRows:%d\tCols:%d\t\n", scrnRow,scrnCol);
+	printw("Sym-Z Picross World!\nRows:%d\tCols:%d\t\n\n", scrnRow,scrnCol);
+	printw("Controls:\nMove: Arrow Keys\nUncover: Z\nMark as empty: X\n");
 	refresh();
 	
 	//Make the puzzle, randomize it, and fill clue queues
@@ -33,16 +42,16 @@ int main(int argc, char *argv[])
 
 	//Start the puzzle in the center of the screen
 	int startx, starty;
-	starty = (scrnRow - puzzle -> size)/2;
-	startx = (scrnCol - puzzle -> size)/2;
+	starty = (scrnRow - puzzle -> size)/2 + 8;
+	startx = (scrnCol - puzzle -> size)/2 + 5;
 
 
 	//Cursor position in the puzzle
 	size_t posx = 0, posy = 0;
 
 	//Prints test clues
-	non_clue_print_debug(NULL, puzzle);
-	refresh();
+	//non_clue_print_debug(NULL, puzzle);
+	//refresh();
 
 	//Make puzzle frame
 	int borderHeight = puzzleSize + 2;
@@ -66,13 +75,12 @@ int main(int argc, char *argv[])
 	//Print clue window X and Y
 	WINDOW *clue_win_x = newwin(puzzleSize,puzzleSize,starty,borderStartX - puzzleSize);
 	non_clue_print_x(clue_win_x,puzzle);
-	//box(clue_win_x,0,0);
 	wrefresh(clue_win_x);
 
-
 	WINDOW *clue_win_y = newwin(puzzleSize,puzzleSize,borderStartY - puzzleSize,startx);
-	box(clue_win_y,0,0);
+	non_clue_print_y(clue_win_y,puzzle);
 	wrefresh(clue_win_y);
+
 
 	keypad(puzzle_win, TRUE); //Get our keyboard
 	while(1)
@@ -118,6 +126,10 @@ int main(int argc, char *argv[])
 				break;
 			case 'z':
 				uncover(puzzle_win, currSpot);
+				//Check to see if the spot was filled or not, you can deduct a point here.
+				break;
+			case 'x':
+				mark(puzzle_win, currSpot);
 				break;
 			default:
 				goto end;
@@ -158,4 +170,15 @@ void uncover(WINDOW *win, cell_t *curr)
 	mvwprintw(win,curr->y,curr->x,"%c",curr->symbol);
 	wattroff(win, A_REVERSE);
 	wrefresh(win);
+}
+void mark(WINDOW *win, cell_t *curr)
+{
+	if(curr -> symbol == '?')
+	{
+		curr -> symbol = 'X';
+		wattron(win, A_REVERSE);
+		mvwprintw(win,curr->y,curr->x,"%c",curr->symbol);
+		wattroff(win, A_REVERSE);
+		wrefresh(win);
+	}
 }

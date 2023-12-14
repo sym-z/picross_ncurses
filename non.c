@@ -212,7 +212,9 @@ void non_clue_print_x(WINDOW *win, non_t *non)
 				mvwprintw(win,i,j,"%d",currClue -> value);
 				currClue = currClue -> prev;
 				//Print a space to the left, (j-1)
+				mvwprintw(win,i,j-1," ");
 				//Decrement j
+				j--;
 			}
 		}
 	}
@@ -220,7 +222,28 @@ void non_clue_print_x(WINDOW *win, non_t *non)
 //Prints in the column clue window
 void non_clue_print_y(WINDOW *win, non_t *non)
 {
-
+	//starts at  puzzlesize -1, 0 (4,0)
+	//puzzlesize -2, 0 (3,0)
+	//0,... until puzzlesize = 0
+	//puzzlesize -1, 1
+	clue_t * currClue;
+	for(size_t i = 0; i < non -> size; i++)
+	{
+		//Start at the tail of the list and print backward
+		currClue = non -> colClues[i] -> tail;
+		for(int j = (int) non -> size - 1; j >= 0; j--)
+		{
+			if(currClue)
+			{
+				mvwprintw(win,j,i,"%d",currClue -> value);
+				currClue = currClue -> prev;
+				//Print a space to the left, (j-1)
+				mvwprintw(win,j-1,i," ");
+				//Decrement j
+				j--;
+			}
+		}
+	}
 }
 void non_print(WINDOW *win, non_t * non)
 {
