@@ -175,14 +175,27 @@ void start_ncurses()
 	raw(); //Line Buffering
 	keypad(stdscr, TRUE); //Get our keyboard
 	start_color();
+	init_pair(1,COLOR_WHITE,COLOR_RED);
 	noecho();	//Don't echo to the screen
 	curs_set(0);
 
 }
 void move_pos(WINDOW *win, cell_t *curr, cell_t *next)
 {
-	mvwprintw(win, curr->y, curr->x, "%c",curr->symbol);
-
+	int currSymbol = curr -> symbol, nextSymbol = next -> symbol;
+	
+	if(currSymbol == '#' || currSymbol == '_' || currSymbol == '?')
+	{
+		mvwprintw(win, curr->y, curr->x, "%c",curr->symbol);
+	}
+	if(currSymbol == 'X')
+	{
+		wattron(win,COLOR_PAIR(1));
+		mvwprintw(win,curr->y,curr->x,"%c",curr->symbol);
+		wattroff(win,COLOR_PAIR(1));
+		wrefresh(win);
+	}
+	
 	wattron(win, A_REVERSE);
 	mvwprintw(win,next->y,next->x,"%c",next->symbol);
 	wattroff(win, A_REVERSE);
@@ -202,12 +215,11 @@ void mark(WINDOW *win, cell_t *curr)
 	if(curr -> symbol == '?')
 	{
 		curr -> symbol = 'X';
-		//wattron(win, A_REVERSE);
-		init_pair(1,COLOR_WHITE,COLOR_RED);
-		wattron(win,COLOR_PAIR(1));
+		//wattron(win,COLOR_PAIR(1));
+		wattron(win, A_REVERSE);
 		mvwprintw(win,curr->y,curr->x,"%c",curr->symbol);
-		wattroff(win,COLOR_PAIR(1));
-		//wattroff(win, A_REVERSE);
+		wattroff(win, A_REVERSE);
+		//wattroff(win,COLOR_PAIR(1));
 		wrefresh(win);
 	}
 }
