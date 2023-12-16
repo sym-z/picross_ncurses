@@ -4,10 +4,14 @@
 //TODO: Keep track of filled spots and countdown, so you know when the game is over
 //TODO: Deduct a life on a missed input
 //TODO: Edit spacing
-//TODO: Highlight Row and Column that you are in by calling a function in the switch statement.
 //TODO: Marking a spot that is filled deducts a point 
 //TODO: Window for points that gets edited
+//TODO: Print number in red to indicate +10
+//TODO: Paint the hashtags, question marks and the X's so they are different colors
+/*Done: 
 
+//Highlight Row and Column that you are in by calling a function in the switch statement.
+*/
 void start_ncurses();
 void move_pos(WINDOW *win, cell_t *curr, cell_t *next);
 void uncover(WINDOW *win, cell_t *curr);
@@ -30,11 +34,11 @@ int main(int argc, char *argv[])
 
 	getmaxyx(stdscr,scrnRow, scrnCol);
 
-	
+
 	printw("Sym-Z Picross World!\nRows:%d\tCols:%d\t\n\n", scrnRow,scrnCol);
 	printw("Controls:\nMove: Arrow Keys\nUncover: Z\nMark as empty: X\n");
 	refresh();
-	
+
 	//Make the puzzle, randomize it, and fill clue queues
 	non_t *puzzle = non_initialize(puzzleSize);
 	non_randomize(puzzle);
@@ -76,9 +80,13 @@ int main(int argc, char *argv[])
 	WINDOW *clue_win_x = newwin(puzzleSize,puzzleSize,starty,borderStartX - puzzleSize);
 	non_clue_print_x(clue_win_x,puzzle);
 	wrefresh(clue_win_x);
+	clue_highlight_x(clue_win_x, puzzle,posy,1);
+	wrefresh(clue_win_x);
 
 	WINDOW *clue_win_y = newwin(puzzleSize,puzzleSize,borderStartY - puzzleSize,startx);
 	non_clue_print_y(clue_win_y,puzzle);
+	wrefresh(clue_win_y);
+	clue_highlight_y(clue_win_y, puzzle,posx,1);
 	wrefresh(clue_win_y);
 
 
@@ -96,7 +104,11 @@ int main(int argc, char *argv[])
 				{
 
 					nextSpot = &(puzzle -> table[posy-1][posx]);
+					clue_highlight_x(clue_win_x, puzzle,nextSpot -> y,1);
+
 					move_pos(puzzle_win,currSpot, nextSpot);
+					clue_highlight_x(clue_win_x,puzzle,currSpot -> y,0);
+					wrefresh(clue_win_x);
 					posy -= 1;
 				}
 				break;
@@ -104,7 +116,11 @@ int main(int argc, char *argv[])
 				if(posy != puzzle -> size - 1)
 				{
 					nextSpot = &(puzzle -> table[posy+1][posx]);
+					clue_highlight_x(clue_win_x, puzzle,nextSpot -> y,1);
+
 					move_pos(puzzle_win,currSpot, nextSpot);
+					clue_highlight_x(clue_win_x,puzzle,currSpot -> y,0);
+					wrefresh(clue_win_x);
 					posy += 1;
 				}
 				break;
@@ -112,7 +128,11 @@ int main(int argc, char *argv[])
 				if(posx != 0)
 				{	
 					nextSpot = &(puzzle -> table[posy][posx-1]);
+					clue_highlight_y(clue_win_y, puzzle,nextSpot -> x,1);
+
 					move_pos(puzzle_win,currSpot, nextSpot);
+					clue_highlight_y(clue_win_y,puzzle,currSpot -> x,0);
+					wrefresh(clue_win_y);
 					posx -= 1;
 				}
 				break;
@@ -120,7 +140,11 @@ int main(int argc, char *argv[])
 				if(posx != puzzle -> size - 1)
 				{	
 					nextSpot = &(puzzle -> table[posy][posx+1]);
+					clue_highlight_y(clue_win_y, puzzle,nextSpot -> x,1);
+
 					move_pos(puzzle_win,currSpot, nextSpot);
+					clue_highlight_y(clue_win_y,puzzle,currSpot -> x,0);
+					wrefresh(clue_win_y);
 					posx += 1;
 				}
 				break;

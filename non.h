@@ -38,4 +38,7 @@ void non_clue_print_x(WINDOW *win, non_t *non);
 
 void non_clue_print_y(WINDOW *win, non_t *non);
 
+void clue_highlight_x(WINDOW *win, non_t* non, int xpos, bool hl);
+void clue_highlight_y(WINDOW *win, non_t* non, int ypos, bool hl);
+
 #endif //NON_H

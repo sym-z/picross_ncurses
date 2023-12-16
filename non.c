@@ -205,18 +205,29 @@ void non_clue_print_x(WINDOW *win, non_t *non)
 	{
 		//Start at the tail of the list and print backward
 		currClue = non -> rowClues[i] -> tail;
-		for(int j = (int) non -> size - 1; j >= 0; j--)
+		for(int j = (int) non -> size - 1; j >= 0 && currClue; j--)
 		{
-			if(currClue)
-			{
 				mvwprintw(win,i,j,"%d",currClue -> value);
 				currClue = currClue -> prev;
 				//Print a space to the left, (j-1)
 				mvwprintw(win,i,j-1," ");
 				//Decrement j
 				j--;
-			}
 		}
+/* TODO: WHy isnt this equivalent
+		int j = (int) non -> size;
+		while (currClue && j >= 0)
+		{
+				mvwprintw(win,i,j,"%d",currClue -> value);
+				currClue = currClue -> prev;
+				j--;
+				//Print a space to the left, (j-1)
+				mvwprintw(win,i,j-1," ");
+				//Decrement j
+				j--;
+
+		}*/
+
 	}
 }
 //Prints in the column clue window
@@ -231,19 +242,117 @@ void non_clue_print_y(WINDOW *win, non_t *non)
 	{
 		//Start at the tail of the list and print backward
 		currClue = non -> colClues[i] -> tail;
-		for(int j = (int) non -> size - 1; j >= 0; j--)
+		for(int j = (int) non -> size - 1; j >= 0 && currClue; j--)
 		{
-			if(currClue)
-			{
 				mvwprintw(win,j,i,"%d",currClue -> value);
 				currClue = currClue -> prev;
 				//Print a space to the left, (j-1)
 				mvwprintw(win,j-1,i," ");
 				//Decrement j
 				j--;
+		}
+	}
+}
+
+void clue_highlight_x(WINDOW *win, non_t *non, int ypos, bool hl)
+{
+	clue_t *currClue;
+	
+
+	//Iterate through the row and highlight just that row.
+	//Similar to previous loop, but we break when currClue is null;
+	//To either highlight or unhighlight rows
+	//If ypos = 0, then we iterate through colClues[0] from the
+	//tail until colClues is null, printing spaces.
+	/*0 0, 1,0 ...non -> size - 1*/
+	if(hl)
+	{
+
+		wattron(win, A_REVERSE);
+		currClue = non -> rowClues[ypos] -> tail;
+		for(int j = (int) non -> size - 1; j >= 0 && currClue; j--)
+		{
+				
+				mvwprintw(win,ypos,j,"%d",currClue -> value);
+				currClue = currClue -> prev;
+				if(currClue)
+				{
+					//Print a space to the left, (j-1)
+					mvwprintw(win,ypos,j-1," ");
+					//Decrement j
+					j--;
+				}
+		}
+		wattroff(win, A_REVERSE);
+	}
+	else
+	{
+		currClue = non -> rowClues[ypos] -> tail;
+		for(int j = (int) non -> size - 1; j >= 0 && currClue; j--)
+		{
+				
+				mvwprintw(win,ypos,j,"%d",currClue -> value);
+				currClue = currClue -> prev;
+				//Print a space to the left, (j-1)
+				if(currClue)
+				{
+					mvwprintw(win,ypos,j-1," ");
+					//Decrement j
+					j--;
+				}
+		}
+	}
+}
+void clue_highlight_y(WINDOW *win, non_t *non, int xpos, bool hl)
+{
+	clue_t *currClue;
+
+
+	//Iterate through the row and highlight just that row.
+	//Similar to previous loop, but we break when currClue is null;
+	//To either highlight or unhighlight rows
+	//If ypos = 0, then we iterate through colClues[0] from the
+	//tail until colClues is null, printing spaces.
+	/*0 0, 1,0 ...non -> size - 1*/
+	if(hl)
+	{
+
+		wattron(win, A_REVERSE);
+		currClue = non -> colClues[xpos] -> tail;
+		for(int j = (int) non -> size - 1; j >= 0 && currClue; j--)
+		{
+
+			mvwprintw(win,j,xpos,"%d",currClue -> value);
+			currClue = currClue -> prev;
+			if(currClue)
+			{
+				//Print a space to the left, (j-1)
+				mvwprintw(win,j-1,xpos," ");
+				//Decrement j
+				j--;
+			}
+		}
+		wattroff(win, A_REVERSE);
+	}
+	else
+	{
+		currClue = non -> colClues[xpos] -> tail;
+		for(int j = (int) non -> size - 1; j >= 0 && currClue; j--)
+		{
+
+			mvwprintw(win,j,xpos,"%d",currClue -> value);
+			currClue = currClue -> prev;
+			//Print a space to the left, (j-1)
+			if(currClue)
+			{
+				mvwprintw(win,j-1,xpos," ");
+				//Decrement j
+				j--;
 			}
 		}
 	}
+
+
 }
 void non_print(WINDOW *win, non_t * non)
 {
@@ -269,6 +378,7 @@ void non_print(WINDOW *win, non_t * non)
 		}
 	}
 }
+
 
 void non_delete(non_t *non)
 {
