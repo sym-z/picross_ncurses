@@ -3,11 +3,12 @@
 //TODO: Print controls
 //TODO: Keep track of filled spots and countdown, so you know when the game is over
 //TODO: Deduct a life on a missed input
-//TODO: Edit spacing
+//TODO: Edit spacing (I dont think I am going to do this, going to use BK's +10 method.
 //TODO: Marking a spot that is filled deducts a point 
 //TODO: Window for points that gets edited
 //TODO: Print number in red to indicate +10
 //TODO: Paint the hashtags, question marks and the X's so they are different colors
+
 /*Done: 
 
 //Highlight Row and Column that you are in by calling a function in the switch statement.
@@ -46,8 +47,8 @@ int main(int argc, char *argv[])
 
 	//Start the puzzle in the center of the screen
 	int startx, starty;
-	starty = (scrnRow - puzzle -> size)/2 + 8;
-	startx = (scrnCol - puzzle -> size)/2 + 5;
+	starty = (scrnRow - puzzle -> size)/2 + 7;
+	startx = (scrnCol - puzzle -> size)/2 + 10;
 
 
 	//Cursor position in the puzzle
