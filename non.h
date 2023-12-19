@@ -20,6 +20,8 @@ typedef struct Nonogram
 	cluequeue_t ** colClues;
 	cluequeue_t ** rowClues;
 	size_t size;
+	unsigned int total;
+	unsigned int filled;
 }non_t;
 
 non_t *non_initialize(size_t size);

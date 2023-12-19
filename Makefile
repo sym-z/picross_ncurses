@@ -1,5 +1,5 @@
 CC = gcc
-CFLAGS = -g -O3 -Wall -Wpedantic -Wextra
+CFLAGS = -g -O3 -Wall -Wpedantic -Wextra #-fsanitize=address
 OBJS = clueq.o non.o main.o 
 LIBS = -lncurses
 

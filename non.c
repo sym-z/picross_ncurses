@@ -4,6 +4,8 @@ non_t* non_initialize(size_t size)
 {
 	non_t *non = (non_t *) malloc(sizeof(non_t));
 	non -> size = size;
+	non -> total = 100; //Default values to not have auto win 
+	non -> filled = 0;
 	if(non == NULL) return NULL;
 
 	//Initialize Rows
@@ -85,14 +87,19 @@ non_t* non_initialize(size_t size)
 void non_randomize(non_t *non)
 {
 	srand(time(NULL));
-
+	int total = 0;
 	for(size_t i = 0; i < non -> size; i++)
 	{
 		for(size_t j = 0; j < non -> size; j++)
 		{
 			non -> table[i][j].status = rand() % 2;
+			if (non -> table[i][j].status)
+			{
+				total++;
+			}
 		}
 	}
+	non -> total = total;
 }
 
 void non_solve(non_t *non)
