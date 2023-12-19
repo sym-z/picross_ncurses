@@ -22,11 +22,14 @@ typedef struct Nonogram
 	size_t size;
 	unsigned int total;
 	unsigned int filled;
+	char * title;
 }non_t;
 
 non_t *non_initialize(size_t size);
 
 void non_randomize(non_t *non);
+
+void build_from_file(non_t *non, char *file);
 
 void non_print(WINDOW *win, non_t *non);
 

@@ -16,7 +16,7 @@
 //TODO: Edit spacing (I dont think I am going to do this, going to use BK's +10 method.
 //TODO: Marking a spot that is filled deducts a point 
 //TODO: Window for strikes that has GAME WIN/LOSS 
-//TODO: Print number in red to indicate +10
+//TODO: Print number in red to indicate +10 Needs to be red even when highlighted, so it needs to be handled in the highlight function and the clue print function.
 
 /*--------------------------DONE LIST---------------------------*/ 
 
@@ -45,6 +45,8 @@ WINDOW * strike_win = NULL;
 
 int main(int argc, char *argv[])
 {
+	char file[] = "1";
+	build_from_file(NULL,file);
 	//Optionally uses command line args to build the puzzle.
 	size_t puzzleSize = 5;
 	if(argc > 1)
@@ -195,8 +197,9 @@ int main(int argc, char *argv[])
 					if(puzzle -> total == puzzle -> filled)
 					{
 						//GAME WIN
-						printw("GAME WON\n");
-						refresh();
+						//printw("GAME WON\n");
+						mvwprintw(strike_win, 2,1,"GAME WON");
+						wrefresh(strike_win);
 						gameWon = true;
 						//Remove highlighting on win.
 						wattron(puzzle_win,COLOR_PAIR(FILLED));
@@ -221,8 +224,9 @@ int main(int argc, char *argv[])
 					if(puzzle -> total == puzzle -> filled)
 					{
 						//GAME WIN
-						printw("GAME WON\n");
-						refresh();
+						//printw("GAME WON\n");
+						mvwprintw(strike_win, 2,1,"GAME WON");
+						wrefresh(strike_win);
 						gameWon = true;
 						//Remove highlighting on win.
 						wattron(puzzle_win,COLOR_PAIR(FILLED));
@@ -258,7 +262,7 @@ void start_ncurses()
 	raw(); //Line Buffering
 	keypad(stdscr, TRUE); //Get our keyboard
 	start_color();
-	init_pair(MARK,COLOR_WHITE,COLOR_MAGENTA);
+	init_pair(MARK,COLOR_WHITE,COLOR_BLUE);
 	init_pair(FILLED,COLOR_WHITE,COLOR_GREEN);
 	init_pair(EMPTY,COLOR_WHITE,COLOR_RED);
 	noecho();	//Don't echo to the screen
@@ -350,15 +354,16 @@ void strike()
 	static int strikes = 0;
 	int loss = 3;
 	strikes++;
-	printw("Strikes: %d\n", strikes);
+	//printw("Strikes: %d\n", strikes);
 	mvwprintw(strike_win, 1, 10, "%d", strikes);
 	wrefresh(strike_win);
 	refresh();
 	if(strikes == loss)
 	{
 		//TODO: GAME LOSS
-		printw("GAME LOSS\n");
-		refresh();
+		//printw("GAME LOSS\n");
+		mvwprintw(strike_win, 2,1,"GAME LOSS");
+		wrefresh(strike_win);
 		//TODO: END SCREEN
 		gameLoss = true;
 		sleep(3);
