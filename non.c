@@ -111,7 +111,7 @@ void build_from_file(non_t *non, char *file)
 	char dir[] = "puzzles/";
 	strcat(filePath, dir);
 	strcat(filePath, file);
-	fprintf(stderr,"File Path: %s\n", filePath);
+	//fprintf(stderr,"File Path: %s\n", filePath);
 	FILE *p_file = fopen(filePath, "r");
 	if(p_file == NULL)
 	{
@@ -127,20 +127,42 @@ void build_from_file(non_t *non, char *file)
 		//fprintf(stderr, "%s", string);
 		//TODO: ERROR HANDLE
 		size_t puzzle_size = (size_t) atoi(size);
-		fprintf(stderr, "%ld\n", puzzle_size);
+		//fprintf(stderr, "%ld\n", puzzle_size);
 		char * name = fgets(buffer, sizeof(buffer), p_file);
-		fprintf(stderr, "%s", name);
-		
+		//fprintf(stderr, "%s", name);
+
 		//Initialize member variables
 		non -> title = name;
 		non -> size = puzzle_size;
-		
+
 		/*
-			Iterate through the puzzle, change cell status', and calculate
-			total filled spots, just like randomize();
-		*/
+		   Iterate through the puzzle, change cell status', and calculate
+		   total filled spots, just like randomize();
+		 */
+		char *puzzle_line = NULL;
+		for(size_t i = 0; i < non -> size; i++)
+		{
+			//Pull a string
+			puzzle_line = fgets(buffer, sizeof(buffer), p_file);
+
+			for(size_t j = 0; j < non -> size; j++)
+			{
+				//Iterate through characters
+				if(puzzle_line[j] == '_')
+				{
+					non -> table[i][j].status = 0;
+				}
+				else
+				{
+					non -> table[i][j].status = 1;
+					total++;
+				}
+
+			}
+		}
+		non -> total = total;
+		//fprintf(stderr, "Total = %d\n", total);
 	}
-	//non -> total = total;
 }
 void non_solve(non_t *non)
 {

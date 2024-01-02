@@ -45,8 +45,6 @@ WINDOW * strike_win = NULL;
 
 int main(int argc, char *argv[])
 {
-	char file[] = "1";
-	build_from_file(NULL,file);
 	//Optionally uses command line args to build the puzzle.
 	size_t puzzleSize = 5;
 	if(argc > 1)
@@ -70,7 +68,9 @@ int main(int argc, char *argv[])
 
 	//Make the puzzle, randomize it, and fill clue queues
 	non_t *puzzle = non_initialize(puzzleSize);
-	non_randomize(puzzle);
+	char file[] = "1";
+	build_from_file(puzzle,file);
+	//non_randomize(puzzle);
 	non_solve(puzzle);
 
 	//Start the puzzle in the center of the screen
