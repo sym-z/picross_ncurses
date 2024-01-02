@@ -281,7 +281,7 @@ void non_clue_print_x(WINDOW *win, non_t *non)
 				{
 					wattron(win, COLOR_PAIR(4));
 				}
-				mvwprintw(win,i,j,"%d",currClue -> value);
+				mvwprintw(win,i,j,"%d",currClue -> value % 10);
 				if(currClue -> value >= 10 && currClue -> value <= 20)
 				{	
 					wattroff(win, COLOR_PAIR(4));
@@ -327,7 +327,7 @@ void non_clue_print_y(WINDOW *win, non_t *non)
 				{
 					wattron(win, COLOR_PAIR(4));
 				}
-				mvwprintw(win,j,i,"%d",currClue -> value);
+				mvwprintw(win,j,i,"%d",currClue -> value % 10);
 				if(currClue -> value >= 10 && currClue -> value <= 20)
 				{	
 					wattroff(win, COLOR_PAIR(4));
@@ -365,7 +365,7 @@ void clue_highlight_x(WINDOW *win, non_t *non, int ypos, bool hl)
 					wattron(win, COLOR_PAIR(4));
 					wattroff(win, A_REVERSE);
 				}
-				mvwprintw(win,ypos,j,"%d",currClue -> value);
+				mvwprintw(win,ypos,j,"%d",currClue -> value % 10);
 				if(currClue -> value >= 10 && currClue -> value <= 19)
 				{
 					wattroff(win, COLOR_PAIR(4));
@@ -392,7 +392,7 @@ void clue_highlight_x(WINDOW *win, non_t *non, int ypos, bool hl)
 				{
 					wattron(win, COLOR_PAIR(4));
 				}
-				mvwprintw(win,ypos,j,"%d",currClue -> value);
+				mvwprintw(win,ypos,j,"%d",currClue -> value % 10);
 				if(currClue -> value >= 10 && currClue -> value <= 19)
 				{
 					wattroff(win, COLOR_PAIR(4));
@@ -432,7 +432,7 @@ void clue_highlight_y(WINDOW *win, non_t *non, int xpos, bool hl)
 				wattron(win, COLOR_PAIR(4));
 				wattroff(win, A_REVERSE);
 			}
-			mvwprintw(win,j,xpos,"%d",currClue -> value);
+			mvwprintw(win,j,xpos,"%d",currClue -> value % 10);
 			if(currClue -> value >= 10 && currClue -> value <= 19)
 			{
 				wattroff(win, COLOR_PAIR(4));
@@ -459,7 +459,7 @@ void clue_highlight_y(WINDOW *win, non_t *non, int xpos, bool hl)
 			{
 				wattron(win, COLOR_PAIR(4));
 			}
-			mvwprintw(win,j,xpos,"%d",currClue -> value);
+			mvwprintw(win,j,xpos,"%d",currClue -> value % 10);
 			if(currClue -> value >= 10 && currClue -> value <= 19)
 			{
 				wattroff(win, COLOR_PAIR(4));
