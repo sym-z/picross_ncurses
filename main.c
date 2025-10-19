@@ -77,7 +77,7 @@ int main(int argc, char *argv[])
 	//Figure out if we are building a random puzzle or one from file
 	int selection = display_main_menu();
 	//Default Title and Controls
-	printw("Sym-Z Picross World!\nRows:%d\tCols:%d\t\n\n", scrnRow,scrnCol);
+	//printw("Sym-Z Picross World!\nRows:%d\tCols:%d\t\n\n", scrnRow,scrnCol);
 	printw("Controls:\nMove: Arrow Keys\nUncover: Z\nMark as empty: X\nQ: Quit\n");
 	wattron(stdscr, COLOR_PAIR(PLUS10));
 	printw("This color means\nthe number is +10\n");
@@ -141,6 +141,7 @@ int main(int argc, char *argv[])
 		else
 		{
 			puzzle = non_initialize(HARD);
+            file = "3";
 			build_from_file(puzzle,file);
 			//PB HARD
 			puzzleSize = HARD;
@@ -461,7 +462,7 @@ int display_main_menu()
 	};
 	int num_choices = sizeof(choices) / sizeof(char *);
 	int current_selection = 0;
-	printw("MAIN MENU\n");
+	printw("PICROSS NCURSES\nPRESS ENTER TO SELECT, ARROW KEYS TO MOVE SELECTION\n");
 	for (int i = 0; i < num_choices; i++)
 	{
 		if(i == current_selection)
@@ -500,10 +501,11 @@ int display_main_menu()
 				clear();
 				return current_selection;
 			default:
-				goto end;
+				clear();
+				return current_selection;
 		}
 		clear();
-		printw("MAIN MENU\n");
+		printw("PICROSS NCURSES\nPRESS ENTER TO SELECT, ARROW KEYS TO MOVE SELECTION\n");
 		for (int i = 0; i < num_choices; i++)
 		{
 			if(i == current_selection)

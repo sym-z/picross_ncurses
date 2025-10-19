@@ -2,3 +2,4 @@
 *.swp
 a.out
 old.cc
+.DS_Store
