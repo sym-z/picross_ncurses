@@ -501,8 +501,9 @@ int display_main_menu()
 				clear();
 				return current_selection;
 			default:
-				clear();
-				return current_selection;
+				;
+				//clear();
+				//return current_selection;
 		}
 		clear();
 		printw("PICROSS NCURSES\nPRESS ENTER TO SELECT, ARROW KEYS TO MOVE SELECTION\n");
