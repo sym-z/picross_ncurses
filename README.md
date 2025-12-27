@@ -12,3 +12,4 @@ NCURSES is required to use this program. To install NCURSES, use the following c
 
 sudo apt install libncurses5-dev libncursesw5-dev
 
+Dependent on the C Language and its standard library, and the use of the GNU utility `make`.
